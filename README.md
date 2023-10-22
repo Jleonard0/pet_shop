@@ -20,15 +20,6 @@ Configuração inicial:Este projeto utiliza o arquivo de configuração ".env" n
 
 ---
 
-Iniciando banco de dados:
-
-    create database petshop;
-    use petshop;
-    create table servicos(id int not null auto_increment, nome varchar(255)
-not null, valor float not null, primary key(id));
-
---- 
-
 Iniciar projeto:
 
     npm run dev
