@@ -14,6 +14,4 @@ const Servicos = db.define('Servicos', {
     }
 });
 
-Servicos.sync({ force: false })
-
 module.exports = Servicos;

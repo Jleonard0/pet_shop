@@ -1,9 +1,14 @@
-const Services = require('../models/Services');
+const ServicesController = require('./ServicesController');
 
 class HomeController {
     static async render(req, res){
-        const tableServices = await Services.findAll();
-        res.render('home', {'title':'Início','tabelas_de_servicos': tableServices})
+        res.render(
+            'home',
+            {
+                'title':'Início',
+                'tabelas_de_servicos': await ServicesController.getTable()
+            }
+        );
     }
 };
 

@@ -3,23 +3,29 @@ const exphbs = require('express-handlebars');
 const dotenv = require('dotenv');
 const app = express();
 const AllRoutes = require('./routes/AllRoutes');
+const bd = require('./controller/conn');
 
 dotenv.config({path: '.env'});
 const port = process.env.PORT;
 
-app.engine('handlebars', exphbs.engine());
-app.set('view engine', 'handlebars');
+app
+    .engine('handlebars', exphbs.engine())
+    .set('view engine', 'handlebars')
+    .use(
+        express.static('public'),
+        express.urlencoded({
+            extended: true
+        }),
+        express.json()
+    )
+    .use('/', AllRoutes);
 
-app.use(
-    express.static('public'),
-    express.urlencoded({
-        extended: true
-    }),
-    express.json()
-);
-
-app.use('/', AllRoutes);
-
-app.listen(port, () => {
-    console.log('Servidor iníciado...');
-});
+bd
+    .sync({ force: false })
+    .then(()=>{
+        app.listen(port);
+        console.log('Servidor iníciado...');
+    })
+    .catch((err)=>{
+        console.log(err);
+    });
