@@ -18,6 +18,15 @@ Configuração inicial:Este projeto utiliza o arquivo de configuração ".env" n
     DATABASE_PASSWORD=Sua_senha
     DATABASE=petshop
 
+---
+
+Iniciando banco de dados:
+
+    create database petshop;
+    use petshop;
+    create table servicos(id int not null auto_increment, nome varchar(255)
+not null, valor float not null, primary key(id));
+
 --- 
 
 Iniciar projeto:
