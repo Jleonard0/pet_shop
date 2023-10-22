@@ -1,0 +1,70 @@
+<main class="container">
+    <div class="thumbnail text-center">
+        <h1 class="position-relative thumbnail_title">[nome da empresa]</h1>
+        <img src="/images/dog_thumbnail.svg" class="img-fluid center-block"
+            alt="Imagem de um cachorro alegre, sendo banhado por funcionários da [nome da empresa].">
+    </div>
+    <div class="container my-3">
+        <h3 id="Inicio">Seja muito bem-vindo ao [nome da empresa]</h3>
+        <p class="mx-3">Nossa missão é garantir que seu companheiro peludo receba o melhor atendimento, carinho e
+            serviços de alta
+            qualidade. Estamos comprometidos em cuidar de todos os pets com o amor e dedicação que eles merecem.</p>
+    </div>
+    <div class="container my-3 d-flex flex-row">
+        <div class="w-50">
+            <h3 id="Servicos">Tabela de Preços dos Serviços</h3>
+            <p class="mx-3">Oferecemos uma variedade de serviços para atender às necessidades do seu pet. Aqui na
+                PetShop
+                Amigo Fiel, acreditamos que o cuidado adequado não precisa ser caro. Confira nossa tabela de preços
+                transparente para saber mais sobre o custo dos nossos serviços. Temos opções para todos os orçamentos,
+                desde
+                banhos e tosas até cuidados veterinários. Seu amigo peludo merece o melhor e aqui você encontra a
+                qualidade
+                que procura com preços acessíveis.</p>
+        </div>
+        <table class="table table-striped-columns w-50">
+            <thead style="border-bottom: 2px solid #000;">
+                <tr>
+                    <th scope="col">Serviço</th>
+                    <th scope="col">Preço</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each tabelas_de_servicos}}
+                <tr>
+                    <td>{{this.nome}}</td>
+                    <td>{{this.valor}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <div class="container my-3">
+        <h3 id="Sobre">Sobre a Empresa</h3>
+        <p class="mx-3">O [Nome da empresa] é uma empresa dedicada a cuidar e nutrir a relação entre você e seu animal
+            de estimação. Estamos no mercado há mais de 10 anos, e ao longo desse tempo, acumulamos uma equipe
+            apaixonada por animais que se dedica a fornecer os melhores serviços para seu pet. Nossos profissionais são
+            experientes e treinados para garantir que seu animal de estimação receba o melhor tratamento possível.
+            Nossas instalações são modernas e seguras, com equipamentos de última geração. Estamos comprometidos com a
+            segurança e o bem-estar do seu animal de estimação em cada visita. Além disso, temos uma equipe de
+            veterinários experientes prontos para cuidar da saúde do seu pet.</p>
+    </div>
+    <div class="container my-3 d-flex flex-row">
+        <div class="w-75">
+            <h3 id="Contato">Entre em contato com a gente</h3>
+            <p class="mx-3">Ficamos felizes em responder a todas as suas perguntas e agendar serviços para o seu animal
+                de
+                estimação. Seja para marcar um banho, agendar uma consulta veterinária ou esclarecer dúvidas sobre
+                nossos
+                serviços, estamos à disposição para ajudar. Entre em contato conosco pelos seguintes meios:</p>
+        </div>
+        <ul class="list-group w-25">
+            <a class="list-group-item list-group-item-action list-group-item-info" href="tel:+55xx9xxxx-xxxx">Telefone:
+                (xx) 9 xxxx-xxxx</a>
+            <a class="list-group-item list-group-item-action list-group-item-info"
+                href="mailto:email@exemplo.com">E-mail: email@exemplo.com</a>
+            <a class="list-group-item list-group-item-action list-group-item-info"
+                href="https://wa.me/+55xx9xxxxxxxx">Whatsapp: (xx) 9 xxxx-xxxx</a>
+        </ul>
+    </div>
+</main>
