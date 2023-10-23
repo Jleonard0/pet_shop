@@ -1,10 +1,10 @@
 const Services = require('../models/Services');
 
 module.exports = class UserController{
-    static async newService(nome, valor){
+    static async newService(name, value){
         const servico = {
-            nome: nome,
-            valor: valor
+            name: name,
+            value: value
         };
         await Services.create(servico);
     }
