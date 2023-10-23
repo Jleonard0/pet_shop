@@ -8,17 +8,13 @@ const bd = require('./controller/conn');
 dotenv.config({path: '.env'});
 const port = process.env.PORT;
 
-app
-    .engine('handlebars', exphbs.engine())
-    .set('view engine', 'handlebars')
-    .use(
-        express.static('public'),
-        express.urlencoded({
-            extended: true
-        }),
-        express.json()
-    )
-    .use('/', AllRoutes);
+app.engine('handlebars', exphbs.engine());
+app.set('view engine', 'handlebars');
+app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+app.use('/', AllRoutes);
+
 
 bd
     .sync({ force: false })
