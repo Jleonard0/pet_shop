@@ -2,11 +2,15 @@ const Users = require('../models/Users');
 
 class UserController {
     static login(req, res) {
-        if(req.session.userid){
-            res.redirect('/administracao/painel');
-            return
+        try {
+            if (req.session.userid) {
+                res.redirect('/administracao/painel');
+                return
+            }
+            res.render('login', { 'title': 'Autenticação' });
+        } catch (error) {
+            console.log(error)
         }
-        res.render('login', { 'title': 'Autenticação' });
     }
 
     static async loginPost(req, res) {
@@ -36,48 +40,87 @@ class UserController {
     }
 
     static logout(req, res) {
-        console.log('remover_autenticacao');
-        req.session.destroy();
-        req.flash('message', 'Você foi desconectado com sucesso.');
-        res.redirect('/administracao');
+        try {
+            console.log('remover_autenticacao');
+            req.session.destroy();
+            res.redirect('/administracao');
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     static async user(req, res) {
-        
-    }
-
-    static async __newUser(full_name, cpf, email, password, role) {
-
-        await Users.create({
-            full_name: full_name,
-            cpf: cpf,
-            email: email,
-            password: password,
-            role: role
-        })
+        try {
+            if (req.session.userid) {
+                const user = await Users.findOne({ where: { id: req.session.userid } });
+                res.render('usuario', {
+                    title: user.full_name,
+                    full_name: user.full_name,
+                    cpf: user.cpf,
+                    email: user.email
+                });
+                return
+            }
+            res.redirect('/administracao');
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     static addUser(req, res) {
         res.render('addUser', { 'title': 'Adicionar novo usuário' });
     }
 
-    static addUserPost(req, res) {
-        const { full_name, cpf, email, password, role } = req.body;
-        this.__newUser(full_name, cpf, email, password, role)
-        res.redirect('/administracao/addUser');
+    static async addUserPost(req, res) {
+        try {
+            const { full_name, cpf, email, password, role } = req.body;
+            await Users.create({
+                full_name: full_name,
+                cpf: cpf,
+                email: email,
+                password: password,
+                role: role
+            })
+            res.redirect('/administracao/addUser');
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    static async __addAdmin(){
-        await Users.findOrCreate({
-            where: {id: 1},
-            defaults: {
-                full_name: 'Nome do adiministrador',
-                cpf: '000.000.000-00',
-                email: 'admin@email.com',
-                password: 'admin',
-                role: 'adiministrador'
-            }
-        });
+    static async updateUser(req, res) {
+        try {
+            const { full_name, cpf, email, password } = req.body;
+
+            const result = await Users.update(
+                {
+                    full_name: full_name,
+                    email: email,
+                    cpf: cpf,
+                    password: password
+                },
+                { where: { id: req.session.userid } }
+            );
+            res.redirect('/administracao/usuario');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    static async __addAdmin() {
+        try {
+            await Users.findOrCreate({
+                where: { id: 1 },
+                defaults: {
+                    full_name: 'Nome do adiministrador',
+                    cpf: '000.000.000-00',
+                    email: 'admin@email.com',
+                    password: 'admin',
+                    role: 'adiministrador'
+                }
+            });
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 

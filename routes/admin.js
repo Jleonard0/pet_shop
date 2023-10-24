@@ -10,8 +10,11 @@ router.get('/remover_autenticacao', UserController.logout);
 
 router.get('/usuario', UserController.user);
 
+router.post('/atualizar_usuario', UserController.updateUser);
+
 // a fazer:
 // /novo_usuario
+// /atualizar_usuario
 // /usuario
 // /painel
 // /funcionalidades
