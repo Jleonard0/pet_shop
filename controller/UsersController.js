@@ -30,6 +30,7 @@ class UserController {
                 return
             }
             req.session.userid = user.id;
+            req.session.userrole = user.role;
             req.flash('message', 'Sejá bem vindo(a) ' + user.full_name + '.');
             req.session.save(() => {
                 res.redirect('/administracao/painel');
@@ -68,20 +69,29 @@ class UserController {
     }
 
     static addUser(req, res) {
-        res.render('addUser', { 'title': 'Adicionar novo usuário' });
+        if (req.session.userid && req.session.userrole === 'adiministrador') {
+            res.render('addUser', { 'title': 'Adicionar novo funcionário' });
+            return
+        }
+        res.redirect('/administracao');
     }
 
     static async addUserPost(req, res) {
         try {
-            const { full_name, cpf, email, password, role } = req.body;
-            await Users.create({
-                full_name: full_name,
-                cpf: cpf,
-                email: email,
-                password: password,
-                role: role
-            })
-            res.redirect('/administracao/addUser');
+            if (req.session.userid && req.session.userrole === 'adiministrador') {
+                const { full_name, cpf, email, password, role } = req.body;
+                const new_user = await Users.create({
+                    full_name: full_name,
+                    cpf: cpf,
+                    email: email,
+                    password: password,
+                    role: role
+                });
+                new_user.save();
+                res.redirect('/administracao/adicionar_funcionario');
+                return
+            }
+            res.redirect('/administracao');
         } catch (error) {
             console.log(error)
         }
