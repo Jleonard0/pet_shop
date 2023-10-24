@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
+const UserController = require('../controller/UsersController');
 
-router.get('/', (req, res) => {
-    res.render('login', {'title':'Início'});
-})
+router.get('/', UserController.login);
 
-router.post('/', (req, res) => {
-    res.render('login', {'title':'Entre na sua conta'});
-})
+router.post('/', UserController.loginPost);
+
+router.get('/remover_autenticacao', UserController.logout);
+
+router.get('/usuario', UserController.user);
+
+// a fazer:
+// /novo_usuario
+// /usuario
+// /painel
+// /funcionalidades
+
 
 module.exports = router;

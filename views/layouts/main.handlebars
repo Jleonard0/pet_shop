@@ -31,6 +31,18 @@
             </div>
         </nav>
     </header>
+    <div class="container text-center w-50">
+        {{#if messages.message}}
+        <div class="alert alert-warning" role="alert">
+            {{messages.message}}
+        </div>
+        {{/if}}
+        {{#if message}}
+        <div class="alert alert-warning" role="alert">
+            {{message}}
+        </div>
+        {{/if}}
+    </div>
     {{{body}}}
     <footer class="bg-secondary d-flex flex-row p-3 text-light">
         <div class="w-50">
