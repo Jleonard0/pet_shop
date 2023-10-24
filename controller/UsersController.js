@@ -87,7 +87,7 @@ class UserController {
         }
     }
 
-    static async updateUser(req, res) {
+    static async userPost(req, res) {
         try {
             const { full_name, cpf, email, password } = req.body;
 
