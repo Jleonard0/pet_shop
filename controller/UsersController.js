@@ -1,10 +1,21 @@
 const Users = require('../models/Users');
+const CPF = require('cpf');
+
+function __render_with_message(req, res, page, variables_of_page, message) {
+    req.flash('message', message);
+    res.render(page, variables_of_page);
+}
+
+function __redirect_with_message(req, res, url, message) {
+    req.flash('message', message);
+    res.redirect(url);
+}
 
 class UserController {
     static login(req, res) {
         try {
             if (req.session.userid) {
-                res.redirect('/administracao/painel');
+                __redirect_with_message(req, res, '/administracao/painel', 'Você já esta autenticado');
                 return
             }
             res.render('login', { 'title': 'Autenticação' });
@@ -20,20 +31,17 @@ class UserController {
                 where: { email: email }
             });
             if (!user) {
-                req.flash('message', 'Usuário não cadastrado');
-                res.render('login', { 'title': 'Autenticação' });
+                __render_with_message(req, res, 'login', { 'title': 'Autenticação' }, 'Usuário não cadastrado');
                 return
             }
             if (!password === user.password) {
-                req.flash('message', 'Senha invalida');
-                res.render('login', { 'title': 'Autenticação' });
+                __render_with_message(req, res, 'login', { 'title': 'Autenticação' }, 'Senha invalida');
                 return
             }
             req.session.userid = user.id;
             req.session.userrole = user.role;
-            req.flash('message', 'Sejá bem vindo(a) ' + user.full_name + '.');
             req.session.save(() => {
-                res.redirect('/administracao/painel');
+                __redirect_with_message(req, res, '/administracao/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
             })
         } catch (error) {
             console.log(error);
@@ -42,7 +50,6 @@ class UserController {
 
     static logout(req, res) {
         try {
-            console.log('remover_autenticacao');
             req.session.destroy();
             res.redirect('/administracao');
         } catch (error) {
@@ -79,7 +86,18 @@ class UserController {
     static async addUserPost(req, res) {
         try {
             if (req.session.userid && req.session.userrole === 'adiministrador') {
-                const { full_name, cpf, email, password, role } = req.body;
+                let { full_name, cpf, email, password, role } = req.body;
+                if (!CPF.isValid(cpf)) {
+                    __render_with_message(req, res, 'addUser', { 'title': 'Adicionar novo funcionário' }, 'CPF invalido.');
+                    return;
+                }
+                cpf = CPF.format(cpf);
+                const user_test_cpf_exists = await Users.findOne({ where: { cpf: cpf } });;
+                const user_test_email_exists = await Users.findOne({ where: { email: email } });;
+                if (user_test_cpf_exists || user_test_email_exists) {
+                    __render_with_message(req, res, 'addUser', { 'title': 'Adicionar novo funcionário' }, 'Usuário já cadastrado.');
+                    return;
+                }
                 const new_user = await Users.create({
                     full_name: full_name,
                     cpf: cpf,
@@ -88,7 +106,7 @@ class UserController {
                     role: role
                 });
                 new_user.save();
-                res.redirect('/administracao/adicionar_funcionario');
+                __redirect_with_message(req, res, '/administracao/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
                 return
             }
             res.redirect('/administracao');
@@ -99,8 +117,18 @@ class UserController {
 
     static async userPost(req, res) {
         try {
-            const { full_name, cpf, email, password } = req.body;
-
+            let { full_name, cpf, email, password } = req.body;
+            if (!CPF.isValid(cpf)) {
+                const user = await Users.findOne({ where: { id: req.session.userid } });
+                __render_with_message(req, res, 'usuario', {
+                    title: user.full_name,
+                    full_name: user.full_name,
+                    cpf: user.cpf,
+                    email: user.email
+                }, 'CPF invalido.');
+                return
+            }
+            cpf = CPF.format(cpf);
             const result = await Users.update(
                 {
                     full_name: full_name,
@@ -110,7 +138,7 @@ class UserController {
                 },
                 { where: { id: req.session.userid } }
             );
-            res.redirect('/administracao/usuario');
+            __redirect_with_message(req, res, '/administracao/usuario', 'Alteração efetuada com sucesso.')
         } catch (error) {
             console.log(error);
         }
