@@ -1,0 +1,19 @@
+<main class="container text-start ">
+    <div class="row justify-content-start align-items-center" style="min-height: 90vh;">
+        <div class="row justify-content-start">
+            <h2>Ferramenta remover funcionario</h2>
+            <p class="text-secondary">Aqui é onde você pode remover os funcionarios do seu petshop.</p>
+            <form action="/administracao/remover_funcionario" method="post" class="text-start col-md-6">
+                <label for="select_employee" class="form-label m-1">Selecione qual funcionario vai remover</label>
+                <select id="select_employee" name="select_employee" class="form-select form-select-lg mb-3" aria-label="Selecione qual funcionario vai remover">
+                    {{#each allUsers}}
+                    <option value="{{this.id}}">{{this.full_name}}</option>
+                    {{/each}}
+                </select>
+                <div class="d-flex justify-content-between my-1">
+                    <button type="submit" class="btn btn-danger my-2">Remover funcionário</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

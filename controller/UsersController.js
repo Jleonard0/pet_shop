@@ -144,6 +144,42 @@ class UserController {
         }
     }
 
+    static async removeUser(req, res) {
+        try {
+            if (req.session.userid && req.session.userrole === 'adiministrador') {
+                const allUsers = await Users.findAll();
+                var allUsersSimplified = [];
+                allUsers.forEach((id) => {
+                    allUsersSimplified.push(
+                        {
+                            id: id.id,
+                            full_name: id.full_name
+                        }
+                    );
+
+                });
+                res.render('removeUser', { 'title': 'Remover funcionário', 'allUsers': allUsersSimplified });
+                return
+            }
+            res.redirect('/administracao');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    static async removeUserPost(req, res) {
+        try {
+            await Users.destroy({
+                where: {
+                    id: req.body.select_employee
+                },
+            });
+            __redirect_with_message(req, res, '/administracao/remover_funcionario', 'Funcionario removido com sucesso.');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     static async __addAdmin() {
         try {
             await Users.findOrCreate({

@@ -16,8 +16,11 @@ router.get('/adicionar_funcionario', UserController.addUser);
 
 router.post('/adicionar_funcionario', UserController.addUserPost);
 
+router.get('/remover_funcionario', UserController.removeUser);
+
+router.post('/remover_funcionario', UserController.removeUserPost);
+
 // a fazer:
-// /novo_usuario
 // /painel
 // /funcionalidades
 
