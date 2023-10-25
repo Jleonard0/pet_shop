@@ -1,0 +1,23 @@
+<main class="container text-start ">
+    <div class="row justify-content-start align-items-center" style="min-height: 90vh;">
+        <div class="row justify-content-start">
+            <h2>Ferramenta adicionar funcionario</h2>
+            <p class="text-secondary">Aqui é onde você pode adicionar os funcionarios do seu petshop.</p>
+            <form action="/administracao/adicionar_funcionario" method="post" class="text-start col-md-6">
+                <label for="full_name" class="form-label m-1">Nome completo</label>
+                <input type="text" id="full_name" name="full_name" value="{{full_name}}" class="form-control m-1" required>
+                <label for="cpf" class="form-label m-1">CPF</label>
+                <input type="text" id="cpf" name="cpf" value="{{cpf}}" class="form-control m-1" required>
+                <label for="email" class="form-label m-1">E-mail</label>
+                <input type="email" id="email" name="email" value="{{email}}" class="form-control m-1" required>
+                <label for="password" class="form-label m-1">Senha</label>
+                <input type="password" id="password" name="password" class="form-control m-1" required>
+                <label for="role" class="form-label m-1">Função</label>
+                <input type="text" id="role" name="role" class="form-control m-1" required>
+                <div class="d-flex justify-content-between my-1">
+                    <button type="submit" class="btn btn-primary my-2">Adicionar funcionário</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

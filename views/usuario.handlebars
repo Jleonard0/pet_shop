@@ -1,0 +1,22 @@
+<main class="container text-start ">
+    <div class="row justify-content-start align-items-center" style="min-height: 90vh;">
+        <div class="row justify-content-start">
+            <h2>Seção do usuário</h2>
+            <p class="text-secondary">Aqui é onde você pode alterar seus dados cadastrados no sistema.</p>
+            <form action="/administracao/atualizar_usuario" method="post" class="text-start col-md-6">
+                <label for="full_name" class="form-label m-1">Nome completo</label>
+                <input type="text" id="full_name" name="full_name" value="{{full_name}}" class="form-control m-1">
+                <label for="cpf" class="form-label m-1">CPF</label>
+                <input type="text" id="cpf" name="cpf" value="{{cpf}}" class="form-control m-1">
+                <label for="email" class="form-label m-1">E-mail</label>
+                <input type="email" id="email" name="email" value="{{email}}" class="form-control m-1">
+                <label for="password" class="form-label m-1">Senha</label>
+                <input type="password" id="password" name="password" class="form-control m-1">
+                <div class="d-flex justify-content-between my-1">
+                    <button type="submit" class="btn btn-primary my-2">Salvar alterações</button>    
+                    <a class="btn btn-warning my-2" href="/administracao/remover_autenticacao">Sair da conta</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
