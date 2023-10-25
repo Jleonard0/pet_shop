@@ -150,13 +150,14 @@ class UserController {
                 const allUsers = await Users.findAll();
                 var allUsersSimplified = [];
                 allUsers.forEach((id) => {
-                    allUsersSimplified.push(
-                        {
-                            id: id.id,
-                            full_name: id.full_name
-                        }
-                    );
-
+                    if (id.id !== req.session.userid) {
+                        allUsersSimplified.push(
+                            {
+                                id: id.id,
+                                full_name: id.full_name
+                            }
+                        );
+                    }
                 });
                 res.render('removeUser', { 'title': 'Remover funcionário', 'allUsers': allUsersSimplified });
                 return
@@ -169,29 +170,32 @@ class UserController {
 
     static async removeUserPost(req, res) {
         try {
-            await Users.destroy({
-                where: {
-                    id: req.body.select_employee
-                },
-            });
-            __redirect_with_message(req, res, '/administracao/remover_funcionario', 'Funcionario removido com sucesso.');
+            if (req.body.select_employee !== req.session.userid) {
+                await Users.destroy({
+                    where: {
+                        id: req.body.select_employee
+                    },
+                });
+                __redirect_with_message(req, res, '/administracao/remover_funcionario', 'Funcionario removido com sucesso.');
+            }
+            __redirect_with_message(req, res, '/administracao/remover_funcionario', 'Você tentou remover sua propria conta.');
         } catch (error) {
             console.log(error);
         }
     }
 
     //a fazer
-    static async functionalities(req, res){
+    static async functionalities(req, res) {
         res.render('functionalities', { 'title': 'Funcionalidades' });
     }
 
     //a fazer
-    static async panel(req, res){
+    static async panel(req, res) {
         res.render('panel', { 'title': 'Painel' });
     }
 
     //a fazer
-    static async panelPost(req, res){
+    static async panelPost(req, res) {
         res.render('panel', { 'title': 'Painel' });
     }
 
