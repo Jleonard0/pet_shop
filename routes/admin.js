@@ -20,9 +20,10 @@ router.get('/remover_funcionario', UserController.removeUser);
 
 router.post('/remover_funcionario', UserController.removeUserPost);
 
-// a fazer:
-// /painel
-// /funcionalidades
+router.get('/painel', UserController.panel);
 
+router.post('/painel', UserController.panelPost);
+
+router.get('/funcionalidades', UserController.functionalities);
 
 module.exports = router;

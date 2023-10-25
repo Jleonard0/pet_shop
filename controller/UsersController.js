@@ -180,6 +180,21 @@ class UserController {
         }
     }
 
+    //a fazer
+    static async functionalities(req, res){
+        res.render('functionalities', { 'title': 'Funcionalidades' });
+    }
+
+    //a fazer
+    static async panel(req, res){
+        res.render('panel', { 'title': 'Painel' });
+    }
+
+    //a fazer
+    static async panelPost(req, res){
+        res.render('panel', { 'title': 'Painel' });
+    }
+
     static async __addAdmin() {
         try {
             await Users.findOrCreate({

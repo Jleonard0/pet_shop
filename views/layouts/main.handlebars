@@ -11,26 +11,11 @@
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">[Nome da empresa]</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="/#Inicio">Início</a>
-                        <a class="nav-link" aria-current="page" href="/#Servicos">Serviços</a>
-                        <a class="nav-link" aria-current="page" href="/#Sobre">Sobre</a>
-                        <a class="nav-link" aria-current="page" href="/#Contato">Contate-nos</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+    {{#if session.userid}}
+    {{> navbar_logged}}
+    {{else}}
+    {{> navbar_not_logged}}
+    {{/if}}
     <div class="container text-center w-50">
         {{#if messages.message}}
         <div class="alert alert-warning" role="alert">
@@ -44,28 +29,7 @@
         {{/if}}
     </div>
     {{{body}}}
-    <footer class="bg-secondary d-flex flex-row p-3 text-light">
-        <div class="w-50">
-            <h4>[Nome da empresa]</h4>
-            <p>Agradecemos por escolher o [Nome da empresa] como o lugar onde seu pet será tratado com carinho e cuidado
-                excepcionais. Estamos ansiosos para cuidar do seu amigo peludo e criar uma parceria duradoura de amor e
-                cuidado.</p>
-        </div>
-        <div class="w-25">
-            <h4>Links</h4>
-            <nav class="list-group">
-                <a href="/#Inicio" class="text-decoration-none text-light">Início</a>
-                <a href="/#Servicos" class="text-decoration-none text-light">Serviços</a>
-                <a href="/#Sobre" class="text-decoration-none text-light">Sobre</a>
-                <a href="/#Contato" class="text-decoration-none text-light">Contate-nos</a>
-                <a href="/administracao" class="text-decoration-none text-light">Administração</a>
-            </nav>
-        </div>
-        <div class="w-25">
-            <h4>Estamos localizados</h4>
-            <img src="/images/map.svg" class="img-thumbnail" alt="Mapa mostrando onde fica o petshop">
-        </div>
-    </footer>
+    {{> footer}}
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
