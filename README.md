@@ -17,6 +17,8 @@ Configuração inicial:Este projeto utiliza o arquivo de configuração ".env" n
     DATABASE_USER=Seu_usuario
     DATABASE_PASSWORD=Sua_senha
     DATABASE=petshop
+    SESSION_NAME=Nome_da_sua_secao
+    SESSION_SECRET=Sua_senha
 
 ---
 
