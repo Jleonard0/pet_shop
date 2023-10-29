@@ -7,6 +7,8 @@ const bd = require('./controller/conn');
 const flash = require('express-flash');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const UsersController = require('./controller/UsersController');
+const RolesController = require('./controller/RolesController');
 
 dotenv.config({path: '.env'});
 const port = process.env.PORT;
@@ -46,11 +48,12 @@ app.use((req, res, next)=>{
     next();
 });
 app.use('/', AllRoutes);
-
 bd
     .sync({ force: false })
     .then(()=>{
         app.listen(port);
+        RolesController.setDefault();
+        UsersController.setAdmin();
         console.log('Servidor iníciado...');
     })
     .catch((err)=>{

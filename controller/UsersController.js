@@ -1,5 +1,7 @@
+const { and } = require('sequelize');
 const Users = require('../models/Users');
 const CPF = require('cpf');
+const RolesController = require('./RolesController');
 
 function __render_with_message(req, res, page, variables_of_page, message) {
     req.flash('message', message);
@@ -9,6 +11,10 @@ function __render_with_message(req, res, page, variables_of_page, message) {
 function __redirect_with_message(req, res, url, message) {
     req.flash('message', message);
     res.redirect(url);
+}
+
+function __isAdmin(userid, userrole) {
+    return userid && userrole === 10;
 }
 
 class UserController {
@@ -39,7 +45,7 @@ class UserController {
                 return
             }
             req.session.userid = user.id;
-            req.session.userrole = user.role;
+            req.session.userrole = user.RoleId;
             req.session.save(() => {
                 __redirect_with_message(req, res, '/administracao/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
             })
@@ -75,9 +81,9 @@ class UserController {
         }
     }
 
-    static addUser(req, res) {
-        if (req.session.userid && req.session.userrole === 'adiministrador') {
-            res.render('addUser', { 'title': 'Adicionar novo funcionário' });
+    static async addUser(req, res) {
+        if (__isAdmin(req.session.userid, req.session.userrole)) {
+            res.render('addUser', { 'title': 'Adicionar novo funcionário', 'allRoles': await RolesController.allRoles() });
             return
         }
         res.redirect('/administracao');
@@ -85,31 +91,32 @@ class UserController {
 
     static async addUserPost(req, res) {
         try {
-            if (req.session.userid && req.session.userrole === 'adiministrador') {
-                let { full_name, cpf, email, password, role } = req.body;
-                if (!CPF.isValid(cpf)) {
-                    __render_with_message(req, res, 'addUser', { 'title': 'Adicionar novo funcionário' }, 'CPF invalido.');
-                    return;
-                }
-                cpf = CPF.format(cpf);
-                const user_test_cpf_exists = await Users.findOne({ where: { cpf: cpf } });;
-                const user_test_email_exists = await Users.findOne({ where: { email: email } });;
-                if (user_test_cpf_exists || user_test_email_exists) {
-                    __render_with_message(req, res, 'addUser', { 'title': 'Adicionar novo funcionário' }, 'Usuário já cadastrado.');
-                    return;
-                }
-                const new_user = await Users.create({
-                    full_name: full_name,
-                    cpf: cpf,
-                    email: email,
-                    password: password,
-                    role: role
-                });
-                new_user.save();
-                __redirect_with_message(req, res, '/administracao/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
+            if (!__isAdmin(req.session.userid, req.session.userrole)) {
+                res.redirect('/administracao');
                 return
             }
-            res.redirect('/administracao');
+            let { full_name, cpf, email, password, RoleId } = req.body;
+            if (!CPF.isValid(cpf)) {
+                __render_with_message(req, res, 'addUser', { 'title': 'Adicionar novo funcionário' }, 'CPF invalido.');
+                return;
+            }
+            cpf = CPF.format(cpf);
+            const user_test_cpf_exists = await Users.findOne({ where: { cpf: cpf } });;
+            const user_test_email_exists = await Users.findOne({ where: { email: email } });;
+            if (user_test_cpf_exists || user_test_email_exists) {
+                __render_with_message(req, res, 'addUser', { 'title': 'Adicionar novo funcionário' }, 'Usuário já cadastrado.');
+                return;
+            }
+            const new_user = await Users.create({
+                full_name: full_name,
+                cpf: cpf,
+                email: email,
+                password: password,
+                RoleId: RoleId
+            });
+            new_user.save();
+            __redirect_with_message(req, res, '/administracao/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
+            return
         } catch (error) {
             console.log(error)
         }
@@ -146,7 +153,7 @@ class UserController {
 
     static async removeUser(req, res) {
         try {
-            if (req.session.userid && req.session.userrole === 'adiministrador') {
+            if (__isAdmin(req.session.userid, req.session.userrole)) {
                 const allUsers = await Users.findAll();
                 var allUsersSimplified = [];
                 allUsers.forEach((id) => {
@@ -170,7 +177,7 @@ class UserController {
 
     static async removeUserPost(req, res) {
         try {
-            if (req.body.select_employee !== req.session.userid) {
+            if (req.body.select_employee !== req.session.userid && req.session.userrole === 10) {
                 await Users.destroy({
                     where: {
                         id: req.body.select_employee
@@ -199,7 +206,7 @@ class UserController {
         res.render('panel', { 'title': 'Painel' });
     }
 
-    static async __addAdmin() {
+    static async setAdmin() {
         try {
             await Users.findOrCreate({
                 where: { id: 1 },
@@ -208,7 +215,8 @@ class UserController {
                     cpf: '000.000.000-00',
                     email: 'admin@email.com',
                     password: 'admin',
-                    role: 'adiministrador'
+                    role: 'adiministrador',
+                    RoleId: 10
                 }
             });
         } catch (error) {
@@ -216,7 +224,5 @@ class UserController {
         }
     }
 }
-
-UserController.__addAdmin();
 
 module.exports = UserController;
