@@ -1,4 +1,5 @@
 const Roles = require('../models/Roles');
+const Utils = require('./Utils');
 
 async function __addRole(id, name){
     await Roles.findOrCreate({
@@ -10,6 +11,10 @@ async function __addRole(id, name){
 }
 
 class RolesController{
+    static isAdmin(userrole){
+        return userrole === Utils.Roles.admin.id;
+    }
+
     static async allRoles(){
         var allRoles = [];
         const roles =  await Roles.findAll();
@@ -25,10 +30,10 @@ class RolesController{
     }
 
     static async setDefault(){
-        await __addRole(10, 'administrador');
-        await __addRole(1, 'recepcionista');
-        await __addRole(2, 'cuidador');
-        await __addRole(3, 'veterinario');
+        await __addRole(Utils.Roles.admin.id, Utils.Roles.admin.name);
+        await __addRole(Utils.Roles.receptionist.id, Utils.Roles.receptionist.name);
+        await __addRole(Utils.Roles.pet_care.id, Utils.Roles.pet_care.name);
+        await __addRole(Utils.Roles.veterinarian.id, Utils.Roles.veterinarian.name);
     }
 }
 

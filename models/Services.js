@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../controller/conn');
+const Roles = require('./Roles');
 
 const Services = db.define('Services', {
     name:{
@@ -14,6 +15,10 @@ const Services = db.define('Services', {
     }
 });
 
-Services.sync({force:false});
+Services.belongsTo(Roles, {
+    foreignKey: {
+        allowNull: false
+    }
+});
 
 module.exports = Services;
