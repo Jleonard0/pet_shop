@@ -37,6 +37,10 @@ const Titles = Object.freeze({
     panel: {
         name_page: 'panel',
         title: 'Painel'
+    },
+    addFunctionality: {
+        name_page: 'addFunctionality',
+        title: 'Adicionar novo serviço'
     }
 });
 
