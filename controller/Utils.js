@@ -41,6 +41,10 @@ const Titles = Object.freeze({
     addFunctionality: {
         name_page: 'addFunctionality',
         title: 'Adicionar novo serviço'
+    },
+    removeFunctionality: {
+        name_page: 'removeFunctionality',
+        title: 'Remover serviço'
     }
 });
 
