@@ -7,7 +7,7 @@ class UserController {
     static login(req, res) {
         try {
             if (req.session.userid) {
-                Utils.Message.redirect(req, res, '/administracao/painel', 'Você já esta autenticado');
+                Utils.Message.redirect(req, res, '/funcionalidade/painel', 'Você já esta autenticado');
                 return
             }
             res.render(Utils.Titles.login.name_page, { 'title': Utils.Titles.login.title });
@@ -33,7 +33,7 @@ class UserController {
             req.session.userid = user.id;
             req.session.userrole = user.RoleId;
             req.session.save(() => {
-                Utils.Message.redirect(req, res, '/administracao/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
+                Utils.Message.redirect(req, res, '/funcionalidade/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
             })
         } catch (error) {
             console.log(error);
@@ -43,7 +43,7 @@ class UserController {
     static logout(req, res) {
         try {
             req.session.destroy();
-            res.redirect('/administracao');
+            res.redirect('/autenticacao');
         } catch (error) {
             console.log(error)
         }
@@ -61,7 +61,7 @@ class UserController {
                 });
                 return
             }
-            res.redirect('/administracao');
+            res.redirect('/autenticacao');
         } catch (error) {
             console.log(error)
         }
@@ -72,13 +72,13 @@ class UserController {
             res.render(Utils.Titles.addUser.name_page, { 'title': Utils.Titles.addUser.title, 'allRoles': await RolesController.allRoles() });
             return
         }
-        res.redirect('/administracao');
+        res.redirect('/autenticacao');
     }
 
     static async addUserPost(req, res) {
         try {
             if (!RolesController.isAdmin(req.session.userrole)) {
-                res.redirect('/administracao');
+                res.redirect('/autenticacao');
                 return
             }
             let { full_name, cpf, email, password, RoleId } = req.body;
@@ -101,7 +101,7 @@ class UserController {
                 RoleId: RoleId
             });
             new_user.save();
-            Utils.Message.redirect(req, res, '/administracao/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
+            Utils.Message.redirect(req, res, '/funcionalidade/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
             return
         } catch (error) {
             console.log(error)
@@ -131,7 +131,7 @@ class UserController {
                 },
                 { where: { id: req.session.userid } }
             );
-            Utils.Message.redirect(req, res, '/administracao/usuario', 'Alteração efetuada com sucesso.')
+            Utils.Message.redirect(req, res, '/funcionalidade/ver_perfil', 'Alteração efetuada com sucesso.')
         } catch (error) {
             console.log(error);
         }
@@ -155,7 +155,7 @@ class UserController {
                 res.render(Utils.Titles.removeUser.name_page, { 'title': Utils.Titles.removeUser.title, 'allUsers': allUsersSimplified });
                 return
             }
-            res.redirect('/administracao');
+            res.redirect('/autenticacao');
         } catch (error) {
             console.log(error);
         }
@@ -169,27 +169,12 @@ class UserController {
                         id: req.body.select_employee
                     },
                 });
-                Utils.Message.redirect(req, res, '/administracao/remover_funcionario', 'Funcionario removido com sucesso.');
+                Utils.Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Funcionario removido com sucesso.');
             }
-            Utils.Message.redirect(req, res, '/administracao/remover_funcionario', 'Você tentou remover sua propria conta.');
+            Utils.Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Você tentou remover sua propria conta.');
         } catch (error) {
             console.log(error);
         }
-    }
-
-    //a fazer
-    static async functionalities(req, res) {
-        res.render(Utils.Titles.functionalities.name_page, { 'title': Utils.Titles.functionalities.title });
-    }
-
-    //a fazer
-    static async panel(req, res) {
-        res.render(Utils.Titles.panel.name_page, { 'title': Utils.Titles.panel.title });
-    }
-
-    //a fazer
-    static async panelPost(req, res) {
-        res.render(Utils.Titles.panel.name_page, { 'title': Utils.Titles.panel.title });
     }
 
     static async setAdmin() {
