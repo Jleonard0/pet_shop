@@ -6,7 +6,8 @@ const Services = db.define('Services', {
     name:{
         type: DataTypes.STRING,
         require: true,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     value:{
         type: DataTypes.FLOAT,
@@ -17,6 +18,7 @@ const Services = db.define('Services', {
 
 Services.belongsTo(Roles, {
     foreignKey: {
+        require: true,
         allowNull: false
     }
 });

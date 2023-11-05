@@ -22,6 +22,10 @@ Configuração inicial:Este projeto utiliza o arquivo de configuração ".env" n
 
 ---
 
+Atualizar o banco de dados para o padrão inicial se não for a sua primeira execulção, modifique no arquivo "app.js" na linha ".sync({ force: false })" para force para "true", salve o arquivo execulte o projeto, troque novamente o valor agora para "false".
+
+---
+
 Iniciar projeto:
 
     npm run dev

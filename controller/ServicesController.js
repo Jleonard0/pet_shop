@@ -1,22 +1,99 @@
 const Services = require('../models/Services');
+const RolesController = require('./RolesController');
+const {Message, InfoPage, Functionalities} = require('./Utils');
+
+async function __newService(name, value, roleId) {
+    const servico = {
+        name: name,
+        value: value,
+        RoleId: roleId
+    };
+    await Services.create(servico);
+}
+
+async function __removeService(name) {
+    await Services.destroy({
+        where: {
+            name: name
+        },
+    });
+}
 
 class ServicesController {
-    static async newService(name, value) {
-        const servico = {
-            name: name,
-            value: value
-        };
-        await Services.create(servico);
-    }
-    static async removeServiceById(id) {
-        await Services.destroy({
-            where: {
-                id: id
-            },
-        });
-    }
     static async getTable() {
         return await Services.findAll();
+    }
+
+    static async addService(req, res){
+        try {
+            if(!RolesController.isAdmin(req.session.userrole)){
+                res.redirect('/autenticacao');
+                return;
+            }
+            res.render(InfoPage.addService.name_page, { 'title': InfoPage.addService.title, 'allRoles': await RolesController.allRoles()});
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static async addServicePost(req, res){
+        try {
+            if(!RolesController.isAdmin(req.session.userrole)){
+                res.redirect('/autenticacao');
+                return;
+            }
+            const { name, value, RoleId } = req.body;
+            await __newService(name, value, RoleId);
+            Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço adicionado com sucesso.');
+        } catch (error) {
+            if(error.errors[0].type && error.errors[0].type === 'unique violation'){
+                Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço já existente, tente outro nome para o serviço.');
+            }
+        }
+    }
+    
+    static async removeService(req, res){
+        try {
+            if(!RolesController.isAdmin(req.session.userrole)){
+                res.redirect('/autenticacao');
+                return;
+            }
+            res.render(InfoPage.removeService.name_page, { 'title': InfoPage.removeService.title});
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static async removeServicePost(req, res){
+        try {
+            if(!RolesController.isAdmin(req.session.userrole)){
+                res.redirect('/autenticacao');
+                return;
+            }
+            const { name, value, RoleId } = req.body;
+            await __removeService(name);
+            Message.redirect(req, res, '/funcionalidade/remover_servico', 'Serviço removido com sucesso.');
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    static async functionalities(req, res) {
+        if(RolesController.isAdmin(req.session.userrole)){
+            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfAdmin':Functionalities.listOfFunctionalitiesOfAdmin });
+            return
+        }
+        res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities });
+    }
+
+    //a fazer
+    static async panel(req, res) {
+        res.render(InfoPage.panel.name_page, { 'title': InfoPage.panel.title });
+    }
+
+    //a fazer
+    static async panelPost(req, res) {
+        res.render(InfoPage.panel.name_page, { 'title': InfoPage.panel.title });
     }
 };
 

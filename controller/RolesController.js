@@ -1,5 +1,5 @@
 const Roles = require('../models/Roles');
-const Utils = require('./Utils');
+const UtilsRoles = require('./Utils').Roles;
 
 async function __addRole(id, name) {
     try {
@@ -16,19 +16,19 @@ async function __addRole(id, name) {
 
 class RolesController {
     static isAdmin(userrole) {
-        return userrole === Utils.Roles.admin.id;
+        return userrole === UtilsRoles.admin.id;
     }
 
     static isReceptionist(userrole) {
-        return userrole === Utils.Roles.receptionist.id;
+        return userrole === UtilsRoles.receptionist.id;
     }
 
     static isPet_care(userrole) {
-        return userrole === Utils.Roles.pet_care.id;
+        return userrole === UtilsRoles.pet_care.id;
     }
 
     static isVeterinarian(userrole) {
-        return userrole === Utils.Roles.veterinarian.id;
+        return userrole === UtilsRoles.veterinarian.id;
     }
 
     static async allRoles() {
@@ -51,10 +51,10 @@ class RolesController {
 
     static async setDefault() {
         try {
-            await __addRole(Utils.Roles.admin.id, Utils.Roles.admin.name);
-            await __addRole(Utils.Roles.receptionist.id, Utils.Roles.receptionist.name);
-            await __addRole(Utils.Roles.pet_care.id, Utils.Roles.pet_care.name);
-            await __addRole(Utils.Roles.veterinarian.id, Utils.Roles.veterinarian.name);
+            await __addRole(UtilsRoles.admin.id, UtilsRoles.admin.name);
+            await __addRole(UtilsRoles.receptionist.id, UtilsRoles.receptionist.name);
+            await __addRole(UtilsRoles.pet_care.id, UtilsRoles.pet_care.name);
+            await __addRole(UtilsRoles.veterinarian.id, UtilsRoles.veterinarian.name);
         } catch (error) {
             console.log(error);
         }
