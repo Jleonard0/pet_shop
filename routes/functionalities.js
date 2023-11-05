@@ -2,16 +2,17 @@ const express = require('express');
 const router = express.Router();
 const ServicesController = require('../controller/ServicesController');
 const UserController = require('../controller/UsersController');
+const Utils = require('../controller/Utils');
 
 router.get('/listar_funcionalidades', ServicesController.functionalities);
 
-router.get('/adicionar_servico', ServicesController.addFunctionality);
+router.get('/adicionar_servico', ServicesController.addService);
 
-router.post('/adicionar_servico', ServicesController.addFunctionalityPost);
+router.post('/adicionar_servico', ServicesController.addServicePost);
 
-router.get('/remover_servico', ServicesController.removeFunctionality);
+router.get('/remover_servico', ServicesController.removeService);
 
-router.post('/remover_servico', ServicesController.removeFunctionalityPost);
+router.post('/remover_servico', ServicesController.removeServicePost);
 
 router.get('/painel', ServicesController.panel);
 

@@ -1,16 +1,16 @@
 const Users = require('../models/Users');
 const CPF = require('cpf');
 const RolesController = require('./RolesController');
-const Utils = require('./Utils');
+const {Message, InfoPage, Roles} = require('./Utils');
 
 class UserController {
     static login(req, res) {
         try {
             if (req.session.userid) {
-                Utils.Message.redirect(req, res, '/funcionalidade/painel', 'Você já esta autenticado');
+                Message.redirect(req, res, '/funcionalidade/painel', 'Você já esta autenticado');
                 return
             }
-            res.render(Utils.Titles.login.name_page, { 'title': Utils.Titles.login.title });
+            res.render(InfoPage.login.name_page, { 'title': InfoPage.login.title });
         } catch (error) {
             console.log(error)
         }
@@ -23,17 +23,17 @@ class UserController {
                 where: { email: email }
             });
             if (!user) {
-                Utils.Message.render(req, res, Utils.Titles.login.name_page, { 'title': Utils.Titles.login.title }, 'Usuário não cadastrado');
+                Message.render(req, res, InfoPage.login.name_page, { 'title': InfoPage.login.title }, 'Usuário não cadastrado');
                 return
             }
             if (password !== user.password) {
-                Utils.Message.render(req, res, Utils.Titles.login.name_page, { 'title': Utils.Titles.login.title }, 'Senha invalida');
+                Message.render(req, res, InfoPage.login.name_page, { 'title': InfoPage.login.title }, 'Senha invalida');
                 return
             }
             req.session.userid = user.id;
             req.session.userrole = user.RoleId;
             req.session.save(() => {
-                Utils.Message.redirect(req, res, '/funcionalidade/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
+                Message.redirect(req, res, '/funcionalidade/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
             })
         } catch (error) {
             console.log(error);
@@ -69,7 +69,7 @@ class UserController {
 
     static async addUser(req, res) {
         if (RolesController.isAdmin(req.session.userrole)) {
-            res.render(Utils.Titles.addUser.name_page, { 'title': Utils.Titles.addUser.title, 'allRoles': await RolesController.allRoles() });
+            res.render(InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title, 'allRoles': await RolesController.allRoles() });
             return
         }
         res.redirect('/autenticacao');
@@ -83,14 +83,14 @@ class UserController {
             }
             let { full_name, cpf, email, password, RoleId } = req.body;
             if (!CPF.isValid(cpf)) {
-                Utils.Message.render(req, res, Utils.Titles.addUser.name_page, { 'title': Utils.Titles.addUser.title }, 'CPF invalido.');
+                Message.render(req, res, InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title }, 'CPF invalido.');
                 return;
             }
             cpf = CPF.format(cpf);
             const user_test_cpf_exists = await Users.findOne({ where: { cpf: cpf } });;
             const user_test_email_exists = await Users.findOne({ where: { email: email } });;
             if (user_test_cpf_exists || user_test_email_exists) {
-                Utils.Message.render(req, res, Utils.Titles.addUser.name_page, { 'title': Utils.Titles.addUser.title }, 'Usuário já cadastrado.');
+                Message.render(req, res, InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title }, 'Usuário já cadastrado.');
                 return;
             }
             const new_user = await Users.create({
@@ -101,7 +101,7 @@ class UserController {
                 RoleId: RoleId
             });
             new_user.save();
-            Utils.Message.redirect(req, res, '/funcionalidade/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
+            Message.redirect(req, res, '/funcionalidade/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
             return
         } catch (error) {
             console.log(error)
@@ -113,7 +113,7 @@ class UserController {
             let { full_name, cpf, email, password } = req.body;
             if (!CPF.isValid(cpf)) {
                 const user = await Users.findOne({ where: { id: req.session.userid } });
-                Utils.Message.render(req, res, 'usuario', {
+                Message.render(req, res, 'usuario', {
                     title: user.full_name,
                     full_name: user.full_name,
                     cpf: user.cpf,
@@ -131,7 +131,7 @@ class UserController {
                 },
                 { where: { id: req.session.userid } }
             );
-            Utils.Message.redirect(req, res, '/funcionalidade/ver_perfil', 'Alteração efetuada com sucesso.')
+            Message.redirect(req, res, '/funcionalidade/ver_perfil', 'Alteração efetuada com sucesso.')
         } catch (error) {
             console.log(error);
         }
@@ -152,7 +152,7 @@ class UserController {
                         );
                     }
                 });
-                res.render(Utils.Titles.removeUser.name_page, { 'title': Utils.Titles.removeUser.title, 'allUsers': allUsersSimplified });
+                res.render(InfoPage.removeUser.name_page, { 'title': InfoPage.removeUser.title, 'allUsers': allUsersSimplified });
                 return
             }
             res.redirect('/autenticacao');
@@ -169,9 +169,9 @@ class UserController {
                         id: req.body.select_employee
                     },
                 });
-                Utils.Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Funcionario removido com sucesso.');
+                Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Funcionario removido com sucesso.');
             }
-            Utils.Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Você tentou remover sua propria conta.');
+            Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Você tentou remover sua propria conta.');
         } catch (error) {
             console.log(error);
         }
@@ -187,7 +187,7 @@ class UserController {
                     email: 'admin@email.com',
                     password: 'admin',
                     role: 'adiministrador',
-                    RoleId: Utils.Roles.admin.id
+                    RoleId: Roles.admin.id
                 }
             });
         } catch (error) {

@@ -1,6 +1,6 @@
 const Services = require('../models/Services');
 const RolesController = require('./RolesController');
-const Utils = require('./Utils');
+const {Message, InfoPage, Functionalities} = require('./Utils');
 
 async function __newService(name, value, roleId) {
     const servico = {
@@ -24,19 +24,19 @@ class ServicesController {
         return await Services.findAll();
     }
 
-    static async addFunctionality(req, res){
+    static async addService(req, res){
         try {
             if(!RolesController.isAdmin(req.session.userrole)){
                 res.redirect('/autenticacao');
                 return;
             }
-            res.render(Utils.Titles.addFunctionality.name_page, { 'title': Utils.Titles.addFunctionality.title, 'allRoles': await RolesController.allRoles()});
+            res.render(InfoPage.addService.name_page, { 'title': InfoPage.addService.title, 'allRoles': await RolesController.allRoles()});
         } catch (error) {
             console.log(error)
         }
     }
 
-    static async addFunctionalityPost(req, res){
+    static async addServicePost(req, res){
         try {
             if(!RolesController.isAdmin(req.session.userrole)){
                 res.redirect('/autenticacao');
@@ -44,27 +44,27 @@ class ServicesController {
             }
             const { name, value, RoleId } = req.body;
             await __newService(name, value, RoleId);
-            Utils.Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço adicionado com sucesso.');
+            Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço adicionado com sucesso.');
         } catch (error) {
             if(error.errors[0].type && error.errors[0].type === 'unique violation'){
-                Utils.Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço já existente, tente outro nome para o serviço.');
+                Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço já existente, tente outro nome para o serviço.');
             }
         }
     }
     
-    static async removeFunctionality(req, res){
+    static async removeService(req, res){
         try {
             if(!RolesController.isAdmin(req.session.userrole)){
                 res.redirect('/autenticacao');
                 return;
             }
-            res.render(Utils.Titles.removeFunctionality.name_page, { 'title': Utils.Titles.removeFunctionality.title});
+            res.render(InfoPage.removeService.name_page, { 'title': InfoPage.removeService.title});
         } catch (error) {
             console.log(error)
         }
     }
 
-    static async removeFunctionalityPost(req, res){
+    static async removeServicePost(req, res){
         try {
             if(!RolesController.isAdmin(req.session.userrole)){
                 res.redirect('/autenticacao');
@@ -72,25 +72,28 @@ class ServicesController {
             }
             const { name, value, RoleId } = req.body;
             await __removeService(name);
-            Utils.Message.redirect(req, res, '/funcionalidade/remover_servico', 'Serviço removido com sucesso.');
+            Message.redirect(req, res, '/funcionalidade/remover_servico', 'Serviço removido com sucesso.');
         } catch (error) {
             console.log(error)
         }
     }
 
-    //a fazer
     static async functionalities(req, res) {
-        res.render(Utils.Titles.functionalities.name_page, { 'title': Utils.Titles.functionalities.title });
+        if(RolesController.isAdmin(req.session.userrole)){
+            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfAdmin':Functionalities.listOfFunctionalitiesOfAdmin });
+            return
+        }
+        res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities });
     }
 
     //a fazer
     static async panel(req, res) {
-        res.render(Utils.Titles.panel.name_page, { 'title': Utils.Titles.panel.title });
+        res.render(InfoPage.panel.name_page, { 'title': InfoPage.panel.title });
     }
 
     //a fazer
     static async panelPost(req, res) {
-        res.render(Utils.Titles.panel.name_page, { 'title': Utils.Titles.panel.title });
+        res.render(InfoPage.panel.name_page, { 'title': InfoPage.panel.title });
     }
 };
 

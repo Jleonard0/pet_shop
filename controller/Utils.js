@@ -1,30 +1,68 @@
 const RolesDefault = Object.freeze({
-    admin:{
-        id:10,
-        name:'administrador'
+    admin: {
+        id: 10,
+        name: 'administrador'
     },
-    receptionist:{
-        id:1,
-        name:'recepcionista'
+    receptionist: {
+        id: 1,
+        name: 'recepcionista'
     },
-    pet_care:{
-        id:2,
-        name:'cuidador'
+    pet_care: {
+        id: 2,
+        name: 'cuidador'
     },
-    veterinarian:{
-        id:3,
-        name:'veterinario'
+    veterinarian: {
+        id: 3,
+        name: 'veterinario'
     }
 });
 
-const Titles = Object.freeze({
+const Functionalities = Object.freeze({
+    functionalitiesBaseUrl: '/funcionalidade',
+    listOfFunctionalities: [
+        {
+            title: 'Painel',
+            description: 'É um painel com as informações mais relevantes para seu cargo.',
+            url: 'painel',
+        },
+        {
+            title: 'Seu Perfil',
+            description: 'Contem suas informações e onde você pode atualizalas',
+            url: 'ver_perfil',
+        }
+    ],
+    listOfFunctionalitiesOfAdmin:[
+        {
+            title: 'Adicionar funcionario',
+            description: 'Adiciona um novo funcionario a sua empresa.',
+            url: 'adicionar_funcionario'
+        },
+        {
+            title: 'Adicionar serviço',
+            description: 'Adiciona um novo serviço a sua empresa.',
+            url: 'adicionar_servico'
+        },
+        {
+            title: 'Remover funcionario',
+            description: 'Remove um funcionario da sua empresa.',
+            url: 'remover_funcionario'
+        },
+        {
+            title: 'Remover serviço',
+            description: 'Remove um serviço da sua empresa.',
+            url: 'remover_servico'
+        }
+    ]
+});
+
+const InfoPage = Object.freeze({
     login: {
-        name_page:'login',
+        name_page: 'login',
         title: 'Autenticação'
     },
     addUser: {
         name_page: 'addUser',
-        title:'Adicionar novo funcionário'
+        title: 'Adicionar novo funcionário'
     },
     removeUser: {
         name_page: 'removeUser',
@@ -32,18 +70,18 @@ const Titles = Object.freeze({
     },
     functionalities: {
         name_page: 'functionalities',
-        title: 'Funcionalidades'
+        title: 'Funcionalidades',
     },
     panel: {
         name_page: 'panel',
         title: 'Painel'
     },
-    addFunctionality: {
-        name_page: 'addFunctionality',
+    addService: {
+        name_page: 'addService',
         title: 'Adicionar novo serviço'
     },
-    removeFunctionality: {
-        name_page: 'removeFunctionality',
+    removeService: {
+        name_page: 'removeService',
         title: 'Remover serviço'
     }
 });
@@ -53,7 +91,7 @@ class Message {
         req.flash('message', message);
         res.render(page, variables_of_page);
     }
-    
+
     static redirect(req, res, url, message) {
         req.flash('message', message);
         res.redirect(url);
@@ -63,7 +101,8 @@ class Message {
 const Utils = Object.freeze({
     Roles: RolesDefault,
     Message: Message,
-    Titles: Titles
+    InfoPage: InfoPage,
+    Functionalities: Functionalities
 });
 
 module.exports = Utils;
