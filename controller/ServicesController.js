@@ -80,7 +80,11 @@ class ServicesController {
 
     static async functionalities(req, res) {
         if(RolesController.isAdmin(req.session.userrole)){
-            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfAdmin':Functionalities.listOfFunctionalitiesOfAdmin });
+            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfAdmin':Functionalities.listOfFunctionalitiesOfAdmin, 'listOfFunctionalitiesOfReceptionist': Functionalities.listOfFunctionalitiesOfReceptionist });
+            return
+        }
+        if(RolesController.isReceptionist(req.session.userrole)){
+            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfReceptionist': Functionalities.listOfFunctionalitiesOfReceptionist });
             return
         }
         res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities });

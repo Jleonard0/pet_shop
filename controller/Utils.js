@@ -52,6 +52,18 @@ const Functionalities = Object.freeze({
             description: 'Remove um serviço da sua empresa.',
             url: 'remover_servico'
         }
+    ],
+    listOfFunctionalitiesOfReceptionist: [
+        {
+            title: 'Adicionar cliente',
+            description: 'Adiciona um novo cliente.',
+            url: 'adicionar_cliente'
+        },
+        {
+            title: 'Remover cliente',
+            description: 'Remove um cliente.',
+            url: 'remover_cliente'
+        }
     ]
 });
 
@@ -83,6 +95,10 @@ const InfoPage = Object.freeze({
     removeService: {
         name_page: 'removeService',
         title: 'Remover serviço'
+    },
+    addClient: {
+        name_page: 'addClient',
+        title: 'Adicionar cliente'
     }
 });
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const ServicesController = require('../controller/ServicesController');
 const UserController = require('../controller/UsersController');
 const Utils = require('../controller/Utils');
+const ClientsController = require('../controller/ClientsController');
 
 router.get('/listar_funcionalidades', ServicesController.functionalities);
 
@@ -29,5 +30,13 @@ router.post('/adicionar_funcionario', UserController.addUserPost);
 router.get('/remover_funcionario', UserController.removeUser);
 
 router.post('/remover_funcionario', UserController.removeUserPost);
+
+router.get('/adicionar_cliente', ClientsController.addClient);
+
+router.post('/adicionar_cliente', ClientsController.addClientPost);
+
+router.get('/remover_cliente', ClientsController.removeClient);
+
+router.post('/remover_cliente', ClientsController.removeClientPost);
 
 module.exports = router;
