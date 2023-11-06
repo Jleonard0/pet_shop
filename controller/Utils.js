@@ -99,6 +99,10 @@ const InfoPage = Object.freeze({
     addClient: {
         name_page: 'addClient',
         title: 'Adicionar cliente'
+    },
+    removeClient: {
+        name_page: 'removeClient',
+        title: 'Remover cliente'
     }
 });
 

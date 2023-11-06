@@ -13,6 +13,12 @@ async function __addClient(name, cpf, telephone, address){
     });
 }
 
+async function __listOfClients(){
+    const allClients = await Clients.findAll();
+    console.log(allClients);
+    return allClients;
+}
+
 class ClientsController{
     static addClient(req, res){
         if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
@@ -36,12 +42,35 @@ class ClientsController{
         Message.redirect(req, res, '/funcionalidade/adicionar_cliente', 'Cliente cadastrado com sucesso.');
     }
 
-    static removeClient(req, res){
-
+    static async removeClient(req, res){
+        if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
+            Message.redirect(req, res, '/autenticacao', 'Utilizer uma conta de atendente ou de administrador para acessar essa página.');
+            return
+        }
+        const clients = await __listOfClients();
+        let listOfClients = []
+        clients.forEach( e => {
+            listOfClients.push({
+                id: e.dataValues.id,
+                name: e.dataValues.name,
+                cpf: e.dataValues.cpf.slice(0,7)
+            });
+            console.log(e.dataValues);
+        })
+        res.render(InfoPage.removeClient.name_page, { title: InfoPage.removeClient.title, listOfClients: listOfClients  });
     }
 
     static async removeClientPost(req, res){
-
+        if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
+            Message.redirect(req, res, '/autenticacao', 'Utilizer uma conta de atendente ou de administrador para acessar essa página.');
+            return
+        }
+        Clients.destroy({
+            where: {
+                id: req.body.select_client
+            }
+        });
+        Message.redirect(req, res, '/funcionalidade/remover_cliente', 'Cliente removido com sucesso.');
     }
 }
 
