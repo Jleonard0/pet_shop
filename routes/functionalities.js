@@ -4,6 +4,7 @@ const ServicesController = require('../controller/ServicesController');
 const UserController = require('../controller/UsersController');
 const Utils = require('../controller/Utils');
 const ClientsController = require('../controller/ClientsController');
+const PetsController = require('../controller/PetsController');
 
 router.get('/listar_funcionalidades', ServicesController.functionalities);
 
@@ -42,5 +43,10 @@ router.post('/remover_cliente', ClientsController.removeClientPost);
 router.get('/informacoes_do_cliente/:clientId', ClientsController.infoCliente);
 
 router.post('/informacoes_do_cliente/:clientId', ClientsController.infoClientPost);
+
+router.post('/informacoes_do_pet/:clientId/:petId', PetsController.infoPetPost);
+router.post('/autualizar_pet/:clientId/:petId', PetsController.savePet);
+router.post('/remover_pet/:clientId/:petId', PetsController.removePet);
+router.post('/adicionar_pet/:clientId', PetsController.addPet);
 
 module.exports = router;

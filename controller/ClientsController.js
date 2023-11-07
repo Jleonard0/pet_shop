@@ -99,7 +99,7 @@ class ClientsController{
             res.render(InfoPage.infoClient.name_page, { title: InfoPage.infoClient.title, client: client });    
             return
         }
-        res.render(InfoPage.editInfoClient.name_page, { title: InfoPage.infoClient.title, client: client });
+        res.render(InfoPage.editInfoClient.name_page, { title: InfoPage.infoClient.title, client: client, listOfPets: await PetsController.listOfPets(client.id), requirePetsAjax: true });
     }
 
     static async infoClientPost(req, res){
