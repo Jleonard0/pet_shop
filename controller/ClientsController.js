@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const Clients = require("../models/Clients");
 const PetsController = require('./PetsController');
 const RolesController = require("./RolesController");
@@ -71,6 +72,57 @@ class ClientsController{
             }
         });
         Message.redirect(req, res, '/funcionalidade/remover_cliente', 'Cliente removido com sucesso.');
+    }
+
+    static async infoCliente(req, res){
+        if(!req.session.userid){
+            res.redirect('/autenticacao');
+            return
+        }
+        let client = await Clients.findOne({
+            where: {
+                id: req.params.clientId
+            }
+        });
+        if(!client){
+            Message.redirect(req, res, '/funcionalidade/listar_funcionalidades', 'Cliente não encontrado.');
+            return
+        }
+        client = {
+            id: client.dataValues.id,
+            name: client.dataValues.name,
+            cpf: client.dataValues.cpf.slice(0,7),
+            address: client.dataValues.address,
+            telephone: client.dataValues.telephone,
+        }
+        if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
+            res.render(InfoPage.infoClient.name_page, { title: InfoPage.infoClient.title, client: client });    
+            return
+        }
+        res.render(InfoPage.editInfoClient.name_page, { title: InfoPage.infoClient.title, client: client });
+    }
+
+    static async infoClientPost(req, res){
+        if(!req.session.userid){
+            res.redirect('/autenticacao');
+            return
+        }
+        const id = req.params.clientId;
+        const { name, cpf, address, telephone } = req.body;
+        if(!CPF.isValid(cpf)){
+            Message.redirect(req, res, '/funcionalidade/informacoes_do_cliente/'+id, 'CPF invalido.');
+            return
+        }
+        await Clients.update(
+            {
+                name: name,
+                cpf: cpf,
+                address: address,
+                telephone: telephone
+            },
+            { where:{ id: id } }
+        );
+        Message.redirect(req, res, '/funcionalidade/informacoes_do_cliente/'+id, 'As informações do cliente foram atualizadas com sucesso.');
     }
 }
 

@@ -39,4 +39,8 @@ router.get('/remover_cliente', ClientsController.removeClient);
 
 router.post('/remover_cliente', ClientsController.removeClientPost);
 
+router.get('/informacoes_do_cliente/:clientId', ClientsController.infoCliente);
+
+router.post('/informacoes_do_cliente/:clientId', ClientsController.infoClientPost);
+
 module.exports = router;

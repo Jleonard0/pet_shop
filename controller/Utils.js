@@ -103,6 +103,14 @@ const InfoPage = Object.freeze({
     removeClient: {
         name_page: 'removeClient',
         title: 'Remover cliente'
+    },
+    infoClient: {
+        name_page: 'infoClient',
+        title: 'Informações do cliente'
+    },
+    editInfoClient: {
+        name_page: 'editInfoClient',
+        title: 'Informações do cliente'
     }
 });
 
