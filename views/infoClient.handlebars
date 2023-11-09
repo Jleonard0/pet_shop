@@ -14,7 +14,24 @@
                 <p>{{client.telephone}}</p>
             </div>
             <div class="text-start col-md-8">
-                {{!-- a fazer --}}
+                <table id="table_pets" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome do pet</th>
+                            <th scope="col">Espécie</th>
+                            <th scope="col">Idade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each listOfPets}}
+                        <tr id="pet_{{this.id}}">
+                            <td id="pet_name_{{this.id}}">{{this.name}}</td>
+                            <td id="pet_species_{{this.id}}">{{this.species}}</td>
+                            <td id="pet_age_{{this.id}}">{{this.age}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

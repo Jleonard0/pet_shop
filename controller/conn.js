@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
-
+const { AlertMenssages } = require('./Utils');
 dotenv.config({path: '.env'});
 const sequelize = new Sequelize(
     database = process.env.DATABASE,
@@ -15,9 +15,9 @@ const sequelize = new Sequelize(
 
 try {
 sequelize.authenticate();
-console.log('Conectado ao banco de dados com sucesso');
+console.log(AlertMenssages.connectedDatabaseSuccessfully);
 } catch (error) {
-console.log('Erro ao conectar ao banco de dados!', error);
+console.log(AlertMenssages.errorConnectingDatabase, error);
 }
 
 module.exports = sequelize;

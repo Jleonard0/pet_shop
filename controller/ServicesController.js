@@ -1,6 +1,6 @@
 const Services = require('../models/Services');
 const RolesController = require('./RolesController');
-const {Message, InfoPage, Functionalities} = require('./Utils');
+const {Message, InfoPage, Functionalities, AlertMenssages} = require('./Utils');
 
 async function __newService(name, value, roleId) {
     const servico = {
@@ -44,10 +44,10 @@ class ServicesController {
             }
             const { name, value, RoleId } = req.body;
             await __newService(name, value, RoleId);
-            Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço adicionado com sucesso.');
+            Message.redirect(req, res, '/funcionalidade/adicionar_servico', AlertMenssages.serviceAddSuccessfully);
         } catch (error) {
             if(error.errors[0].type && error.errors[0].type === 'unique violation'){
-                Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço já existente, tente outro nome para o serviço.');
+                Message.redirect(req, res, '/funcionalidade/adicionar_servico', AlertMenssages.serviceAlreadyExists);
             }
         }
     }

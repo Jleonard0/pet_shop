@@ -1,13 +1,13 @@
 const Users = require('../models/Users');
 const CPF = require('cpf');
 const RolesController = require('./RolesController');
-const {Message, InfoPage, Roles} = require('./Utils');
+const {Message, InfoPage, Roles, AlertMenssages} = require('./Utils');
 
 class UserController {
     static login(req, res) {
         try {
             if (req.session.userid) {
-                Message.redirect(req, res, '/funcionalidade/painel', 'Você já esta autenticado');
+                Message.redirect(req, res, '/funcionalidade/painel', AlertMenssages.youAreAlreadyAuthenticated);
                 return
             }
             res.render(InfoPage.login.name_page, { 'title': InfoPage.login.title });
@@ -23,17 +23,17 @@ class UserController {
                 where: { email: email }
             });
             if (!user) {
-                Message.render(req, res, InfoPage.login.name_page, { 'title': InfoPage.login.title }, 'Usuário não cadastrado');
+                Message.render(req, res, InfoPage.login.name_page, { 'title': InfoPage.login.title }, AlertMenssages.userNotRegistered);
                 return
             }
             if (password !== user.password) {
-                Message.render(req, res, InfoPage.login.name_page, { 'title': InfoPage.login.title }, 'Senha invalida');
+                Message.render(req, res, InfoPage.login.name_page, { 'title': InfoPage.login.title }, AlertMenssages.invalidPassword);
                 return
             }
             req.session.userid = user.id;
             req.session.userrole = user.RoleId;
             req.session.save(() => {
-                Message.redirect(req, res, '/funcionalidade/painel', 'Sejá bem vindo(a) ' + user.full_name + '.');
+                Message.redirect(req, res, '/funcionalidade/painel', AlertMenssages.welcome + user.full_name + '.');
             })
         } catch (error) {
             console.log(error);
@@ -83,14 +83,14 @@ class UserController {
             }
             let { full_name, cpf, email, password, RoleId } = req.body;
             if (!CPF.isValid(cpf)) {
-                Message.render(req, res, InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title }, 'CPF invalido.');
+                Message.render(req, res, InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title }, AlertMenssages.invalidCPF);
                 return;
             }
             cpf = CPF.format(cpf);
             const user_test_cpf_exists = await Users.findOne({ where: { cpf: cpf } });;
             const user_test_email_exists = await Users.findOne({ where: { email: email } });;
             if (user_test_cpf_exists || user_test_email_exists) {
-                Message.render(req, res, InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title }, 'Usuário já cadastrado.');
+                Message.render(req, res, InfoPage.addUser.name_page, { 'title': InfoPage.addUser.title }, AlertMenssages.userAlreadyRegistered);
                 return;
             }
             const new_user = await Users.create({
@@ -101,7 +101,7 @@ class UserController {
                 RoleId: RoleId
             });
             new_user.save();
-            Message.redirect(req, res, '/funcionalidade/adicionar_funcionario', 'Funcionario adicionado com sucesso.')
+            Message.redirect(req, res, '/funcionalidade/adicionar_funcionario', AlertMenssages.employeeAddedSuccessfully)
             return
         } catch (error) {
             console.log(error)
@@ -131,7 +131,7 @@ class UserController {
                 },
                 { where: { id: req.session.userid } }
             );
-            Message.redirect(req, res, '/funcionalidade/ver_perfil', 'Alteração efetuada com sucesso.')
+            Message.redirect(req, res, '/funcionalidade/ver_perfil', AlertMenssages.changeMadeSuccessfully)
         } catch (error) {
             console.log(error);
         }
@@ -169,9 +169,9 @@ class UserController {
                         id: req.body.select_employee
                     },
                 });
-                Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Funcionario removido com sucesso.');
+                Message.redirect(req, res, '/funcionalidade/remover_funcionario', AlertMenssages.employeeRemovedSuccessfully);
             }
-            Message.redirect(req, res, '/funcionalidade/remover_funcionario', 'Você tentou remover sua propria conta.');
+            Message.redirect(req, res, '/funcionalidade/remover_funcionario', AlertMenssages.youTriedRemoveYourAccount);
         } catch (error) {
             console.log(error);
         }
@@ -186,7 +186,7 @@ class UserController {
                     cpf: '000.000.000-00',
                     email: 'admin@email.com',
                     password: 'admin',
-                    role: 'adiministrador',
+                    role: 'administrador',
                     RoleId: Roles.admin.id
                 }
             });

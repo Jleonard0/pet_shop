@@ -1,7 +1,7 @@
 const { where } = require('sequelize');
 const Pets = require('../models/Pets');
 const RolesController = require('./RolesController')
-const { Message } = require('./Utils');
+const { Message, AlertMenssages } = require('./Utils');
 class PetsController {
     static async addPet(req, res) {
         if(!req.session.userid){
@@ -9,12 +9,12 @@ class PetsController {
             return
         }
         if(!RolesController.isAdmin(req.session.userrole) && !RolesController.isReceptionist(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Use uma conta de recepicionista ou de administrador para acessar essa página.')
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin)
             return;
         }
         if (req.body.pet.name === '' || req.body.pet.species === '' || req.body.pet.year_of_birth === '' || req.body.pet.clientId === '') {
             res.json({
-                message: 'Faltou algum dado para completar a operação.'
+                message: AlertMenssages.dataMissing
             });
             return;
         }
@@ -24,7 +24,7 @@ class PetsController {
             year_of_birth: req.body.pet.year_of_birth,
             ClientId: req.body.pet.clientId
         });
-        res.json({ message: 'Pet adicionado com sucesso.', pet: pet })
+        res.json({ message: AlertMenssages.petAddSuccessfully, pet: pet })
     }
 
     static async removePet(req, res) {
@@ -33,7 +33,7 @@ class PetsController {
             return
         }
         if(!RolesController.isAdmin(req.session.userrole) && !RolesController.isReceptionist(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Use uma conta de recepicionista ou de administrador para acessar essa página.')
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin)
             return;
         }
         await Pets.destroy({
@@ -42,7 +42,7 @@ class PetsController {
                 ClientId: req.body.clientId
             }
         });
-        res.json({ message: 'Pet removido com sucesso.' })
+        res.json({ message: AlertMenssages.petRemovedSuccessfully })
     }
 
     static async listOfPets(clientId) {
@@ -70,7 +70,7 @@ class PetsController {
             return
         }
         if(!RolesController.isAdmin(req.session.userrole) && !RolesController.isReceptionist(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Use uma conta de recepicionista ou de administrador para acessar essa página.')
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin)
             return;
         }
         const pet = await Pets.findOne({
@@ -88,12 +88,12 @@ class PetsController {
             return
         }
         if(!RolesController.isAdmin(req.session.userrole) && !RolesController.isReceptionist(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Use uma conta de recepicionista ou de administrador para acessar essa página.')
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin)
             return;
         }
         if (req.body.pet.name === '' || req.body.pet.species === '' || req.body.pet.year_of_birth === '' || req.body.pet.clientId === '') {
             res.json({
-                message: 'Faltou algum dado para completar a operação.'
+                message: AlertMenssages.dataMissing
             });
             return;
         }
@@ -117,7 +117,7 @@ class PetsController {
             ClientId: req.body.pet.clientId,
             id: req.body.pet.id
         }
-        res.json({ message: 'Pet atualizado com sucesso.', pet: pet})
+        res.json({ message: AlertMenssages.petUpdateSuccessfully, pet: pet})
     }
 }
 

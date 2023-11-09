@@ -2,7 +2,7 @@ const { where } = require("sequelize");
 const Clients = require("../models/Clients");
 const PetsController = require('./PetsController');
 const RolesController = require("./RolesController");
-const { Message, InfoPage } = require('./Utils');
+const { Message, InfoPage, AlertMenssages } = require('./Utils');
 const CPF = require('cpf');
 
 async function __addClient(name, cpf, telephone, address){
@@ -23,7 +23,7 @@ async function __listOfClients(){
 class ClientsController{
     static addClient(req, res){
         if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Utilizer uma conta de atendente ou de administrador para acessar essa página.');
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin);
             return
         }
         res.render(InfoPage.addClient.name_page, { title: InfoPage.addClient.title });
@@ -31,21 +31,21 @@ class ClientsController{
     
     static async addClientPost(req, res){
         if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Utilizer uma conta de atendente ou de administrador para acessar essa página.');
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin);
             return
         }
         const { name, cpf, address, telephone } = req.body;
         if(!CPF.isValid(cpf)){
-            Message.redirect(req, res, '/funcionalidade/adicionar_cliente', 'CPF invalido.');
+            Message.redirect(req, res, '/funcionalidade/adicionar_cliente', AlertMenssages.invalidCPF);
             return
         }
         await __addClient(name, CPF.format(cpf), telephone, address);
-        Message.redirect(req, res, '/funcionalidade/adicionar_cliente', 'Cliente cadastrado com sucesso.');
+        Message.redirect(req, res, '/funcionalidade/adicionar_cliente', AlertMenssages.registeredCustomer);
     }
 
     static async removeClient(req, res){
         if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Utilizer uma conta de atendente ou de administrador para acessar essa página.');
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin);
             return
         }
         const clients = await __listOfClients();
@@ -63,7 +63,7 @@ class ClientsController{
 
     static async removeClientPost(req, res){
         if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
-            Message.redirect(req, res, '/autenticacao', 'Utilizer uma conta de atendente ou de administrador para acessar essa página.');
+            Message.redirect(req, res, '/autenticacao', AlertMenssages.notIsReceptionistOrAdmin);
             return
         }
         Clients.destroy({
@@ -71,7 +71,7 @@ class ClientsController{
                 id: req.body.select_client
             }
         });
-        Message.redirect(req, res, '/funcionalidade/remover_cliente', 'Cliente removido com sucesso.');
+        Message.redirect(req, res, '/funcionalidade/remover_cliente', AlertMenssages.customerRemoved);
     }
 
     static async infoCliente(req, res){
@@ -85,7 +85,7 @@ class ClientsController{
             }
         });
         if(!client){
-            Message.redirect(req, res, '/funcionalidade/listar_funcionalidades', 'Cliente não encontrado.');
+            Message.redirect(req, res, '/funcionalidade/listar_funcionalidades', AlertMenssages.clientNotFound);
             return
         }
         client = {
@@ -96,7 +96,7 @@ class ClientsController{
             telephone: client.dataValues.telephone,
         }
         if(!RolesController.isReceptionist(req.session.userrole) && !RolesController.isAdmin(req.session.userrole)){
-            res.render(InfoPage.infoClient.name_page, { title: InfoPage.infoClient.title, client: client });    
+            res.render(InfoPage.infoClient.name_page, { title: InfoPage.infoClient.title, client: client, listOfPets: await PetsController.listOfPets(client.id) });    
             return
         }
         res.render(InfoPage.editInfoClient.name_page, { title: InfoPage.infoClient.title, client: client, listOfPets: await PetsController.listOfPets(client.id), requirePetsAjax: true });
@@ -110,7 +110,7 @@ class ClientsController{
         const id = req.params.clientId;
         const { name, cpf, address, telephone } = req.body;
         if(!CPF.isValid(cpf)){
-            Message.redirect(req, res, '/funcionalidade/informacoes_do_cliente/'+id, 'CPF invalido.');
+            Message.redirect(req, res, '/funcionalidade/informacoes_do_cliente/'+id, AlertMenssages.invalidCPF);
             return
         }
         await Clients.update(
@@ -122,7 +122,7 @@ class ClientsController{
             },
             { where:{ id: id } }
         );
-        Message.redirect(req, res, '/funcionalidade/informacoes_do_cliente/'+id, 'As informações do cliente foram atualizadas com sucesso.');
+        Message.redirect(req, res, '/funcionalidade/informacoes_do_cliente/'+id, AlertMenssages.CustomerInformationUpdatedSuccessfully);
     }
 }
 

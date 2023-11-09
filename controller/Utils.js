@@ -114,6 +114,32 @@ const InfoPage = Object.freeze({
     }
 });
 
+const AlertMenssages = Object.freeze({
+    clientNotFound: 'Cliente não encontrado.',
+    connectedDatabaseSuccessfully: 'Conectado ao banco de dados com sucesso',
+    changeMadeSuccessfully: 'Alteração efetuada com sucesso.',
+    customerRemoved: 'Cliente removido com sucesso.',
+    CustomerInformationUpdatedSuccessfully: 'As informações do cliente foram atualizadas com sucesso.',
+    dataMissing: 'Faltou algum dado para completar a operação.',
+    errorConnectingDatabase: 'Erro ao conectar ao banco de dados!',
+    employeeAddedSuccessfully:'Funcionario adicionado com sucesso.',
+    employeeRemovedSuccessfully: 'Funcionario removido com sucesso.',
+    invalidCPF: 'CPF invalido.',
+    invalidPassword: 'Senha invalida',
+    notIsReceptionistOrAdmin : 'Utilizer uma conta de atendente ou de administrador para acessar essa página.',
+    petRemovedSuccessfully: 'Pet removido com sucesso.',
+    petAddSuccessfully: 'Pet adicionado com sucesso.',
+    petUpdateSuccessfully: 'Pet atualizado com sucesso.',
+    registeredCustomer: 'Cliente cadastrado com sucesso.',
+    serviceAddSuccessfully: 'Serviço adicionado com sucesso.',
+    serviceAlreadyExists: 'Serviço já existente, tente outro nome para o serviço.',
+    userAlreadyRegistered: 'Usuário já cadastrado.',
+    userNotRegistered: 'Usuário não cadastrado',
+    welcome: 'Seja bem vindo(a) ',
+    youAreAlreadyAuthenticated: 'Você já esta autenticado',
+    youTriedRemoveYourAccount: 'Você tentou remover sua propria conta.',
+});
+
 class Message {
     static render(req, res, page, variables_of_page, message) {
         req.flash('message', message);
@@ -130,7 +156,8 @@ const Utils = Object.freeze({
     Roles: RolesDefault,
     Message: Message,
     InfoPage: InfoPage,
-    Functionalities: Functionalities
+    Functionalities: Functionalities,
+    AlertMenssages: AlertMenssages
 });
 
 module.exports = Utils;
