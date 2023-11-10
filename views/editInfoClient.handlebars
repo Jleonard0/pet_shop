@@ -1,0 +1,105 @@
+<main class="container text-start ">
+    <div class="row justify-content-start align-items-start" style="min-height: 80vh;">
+        <div class="row justify-content-start">
+            <h2>Informações do cliente</h2>
+            <p class="text-secondary">Você pode atualizar as Informações do cliente.</p>
+            <form action="/funcionalidade/informacoes_do_cliente/{{client.id}}" method="post"
+                class="text-start col-md-4">
+                <label for="client_id" class="form-label m-1">Id do cliente</label>
+                <input type="number" id="client_id" name="client_id" value="{{client.id}}" class="form-control m-1"
+                    disabled>
+                <label for="name" class="form-label m-1">Nome do cliente</label>
+                <input type="text" id="name" name="name" value="{{client.name}}" class="form-control m-1" required>
+                <label for="cpf" class="form-label m-1">CPF</label>
+                <input type="text" id="cpf" name="cpf" value="{{client.cpf}}" class="form-control m-1" required>
+                <label for="address" class="form-label m-1">Endereço</label>
+                <input type="text" id="address" name="address" value="{{client.address}}" class="form-control m-1"
+                    required>
+                <label for="telephone" class="form-label m-1">Número de telefone</label>
+                <input type="tel" id="telephone" name="telephone" value="{{client.telephone}}" class="form-control m-1"
+                    required>
+                <div class="d-flex justify-content-between my-1">
+                    <button type="submit" class="btn btn-primary my-2">Salvar alterações</button>
+                </div>
+            </form>
+            <div class="text-start col-md-8">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#add_pet_modal">
+                        Adicionar pet
+                    </button>
+                </div>
+                <table id="table_pets" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome do pet</th>
+                            <th scope="col">Espécie</th>
+                            <th scope="col">Idade</th>
+                            <th scope="col">Informações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each listOfPets}}
+                        <tr id="pet_{{this.id}}">
+                            <td id="pet_name_{{this.id}}">{{this.name}}</td>
+                            <td id="pet_species_{{this.id}}">{{this.species}}</td>
+                            <td id="pet_age_{{this.id}}">{{this.age}}</td>
+                            <td><a onclick="loadPet({{this.id}}, {{this.clientId}})" class="link-primary" data-bs-toggle="modal"
+                                    data-bs-target="#edit_pet_modal">Editar</a> | <a onclick="removePet({{this.id}}, {{this.clientId}})"
+                                    class="link-danger">Remover</a></td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                <div class="modal fade" id="add_pet_modal" tabindex="-1" aria-labelledby="add_pet_modalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="add_pet_modalLabel">Adicionar pet</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label for="name_pet" class="form-label m-1">Nome do pet</label>
+                                <input type="text" id="name_pet" name="name_pet" class="form-control m-1">
+                                <label for="species_pet" class="form-label m-1">Espécie</label>
+                                <input type="text" id="species_pet" name="species_pet" class="form-control m-1">
+                                <label for="year_of_birth_pet" class="form-label m-1">Data de nascimento</label>
+                                <input type="date" id="year_of_birth_pet" name="year_of_birth_pet"
+                                    class="form-control m-1">
+                            </div>
+                            <div class="modal-footer">
+                                <button onclick="addPet({{client.id}})" type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="edit_pet_modal" tabindex="-1" aria-labelledby="edit_pet_modalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="edit_pet_modalLabel">Editar pet</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label for="edit_name_pet" class="form-label m-1">Nome do pet</label>
+                                <input type="text" id="edit_name_pet" name="edit_name_pet" class="form-control m-1">
+                                <label for="edit_species_pet" class="form-label m-1">Espécie</label>
+                                <input type="text" id="edit_species_pet" name="edit_species_pet" class="form-control m-1">
+                                <label for="edit_year_of_birth_pet" class="form-label m-1">Data de nascimento</label>
+                                <input type="date" id="edit_year_of_birth_pet" name="edit_year_of_birth_pet"
+                                    class="form-control m-1">
+                            </div>
+                            <div class="modal-footer">
+                                <button id="btn_save_pet" type="button" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

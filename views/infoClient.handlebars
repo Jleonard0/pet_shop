@@ -1,0 +1,38 @@
+<main class="container text-start ">
+    <div class="row justify-content-start align-items-start" style="min-height: 80vh;">
+        <div class="row justify-content-start">
+            <h2>Informações do cliente</h2>
+            <p class="text-secondary">Você pode atualizar as Informações do cliente.</p>
+            <div class="text-start col-md-4">
+                <label class="form-label ">Nome do cliente</label>
+                <p>{{client.name}}</p>
+                <label class="form-label ">CPF</label>
+                <p>{{client.cpf}}</p>
+                <label class="form-label ">Endereço</label>
+                <p>{{client.address}}</p>
+                <label class="form-label ">Número de telefone</label>
+                <p>{{client.telephone}}</p>
+            </div>
+            <div class="text-start col-md-8">
+                <table id="table_pets" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome do pet</th>
+                            <th scope="col">Espécie</th>
+                            <th scope="col">Idade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each listOfPets}}
+                        <tr id="pet_{{this.id}}">
+                            <td id="pet_name_{{this.id}}">{{this.name}}</td>
+                            <td id="pet_species_{{this.id}}">{{this.species}}</td>
+                            <td id="pet_age_{{this.id}}">{{this.age}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>

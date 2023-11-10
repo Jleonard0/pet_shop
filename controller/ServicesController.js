@@ -1,6 +1,6 @@
 const Services = require('../models/Services');
 const RolesController = require('./RolesController');
-const {Message, InfoPage, Functionalities} = require('./Utils');
+const {Message, InfoPage, Functionalities, AlertMenssages} = require('./Utils');
 
 async function __newService(name, value, roleId) {
     const servico = {
@@ -44,10 +44,10 @@ class ServicesController {
             }
             const { name, value, RoleId } = req.body;
             await __newService(name, value, RoleId);
-            Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço adicionado com sucesso.');
+            Message.redirect(req, res, '/funcionalidade/adicionar_servico', AlertMenssages.serviceAddSuccessfully);
         } catch (error) {
             if(error.errors[0].type && error.errors[0].type === 'unique violation'){
-                Message.redirect(req, res, '/funcionalidade/adicionar_servico', 'Serviço já existente, tente outro nome para o serviço.');
+                Message.redirect(req, res, '/funcionalidade/adicionar_servico', AlertMenssages.serviceAlreadyExists);
             }
         }
     }
@@ -80,7 +80,11 @@ class ServicesController {
 
     static async functionalities(req, res) {
         if(RolesController.isAdmin(req.session.userrole)){
-            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfAdmin':Functionalities.listOfFunctionalitiesOfAdmin });
+            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfAdmin':Functionalities.listOfFunctionalitiesOfAdmin, 'listOfFunctionalitiesOfReceptionist': Functionalities.listOfFunctionalitiesOfReceptionist });
+            return
+        }
+        if(RolesController.isReceptionist(req.session.userrole)){
+            res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities, 'listOfFunctionalitiesOfReceptionist': Functionalities.listOfFunctionalitiesOfReceptionist });
             return
         }
         res.render(InfoPage.functionalities.name_page, { 'title': InfoPage.functionalities.title, 'listOfFunctionalities': Functionalities.listOfFunctionalities });
